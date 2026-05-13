@@ -1,0 +1,18 @@
+{
+  "taskId": "validate-binding-regression-fix",
+  "status": "Failed",
+  "summary": "Validated repo/app builds, generated combined apps, and reran the static sensitive-route check, but the required runtime regression suites could not complete in this environment because Core Tools could not reach the local storage secret repository.",
+  "filesTouched": [],
+  "testsRun": {
+    "executed": true,
+    "passed": 11,
+    "failed": 6,
+    "command": "npm run build \u0026\u0026 npm --prefix app/v3 run build \u0026\u0026 npm --prefix app/v3 run lint \u0026\u0026 npm --prefix app/v4 run build \u0026\u0026 npm --prefix app/v4 run lint \u0026\u0026 npm run createCombinedApps \u0026\u0026 npm --prefix app/combined/v3-oldConfig ci \u0026\u0026 npm --prefix app/combined/v3-oldConfig run build \u0026\u0026 npm --prefix app/combined/v4-oldConfig ci \u0026\u0026 npm --prefix app/combined/v4-oldConfig run build \u0026\u0026 npm run testSecurityRegression \u0026\u0026 timeout 70s node out/index.js --model v3 --only cosmosDB.test.js \u0026\u0026 timeout 70s node out/index.js --model v3 --only sql.test.js \u0026\u0026 timeout 70s node out/index.js --model v4 --only cosmosDB.test.js \u0026\u0026 timeout 70s node out/index.js --model v4 --only sql.test.js \u0026\u0026 timeout 70s npm run testAllExceptServiceBus \u0026\u0026 timeout 70s npm run testOldConfig"
+  },
+  "failureExcerpt": "All six runtime commands timed out after Azure Functions Core Tools failed startup with: \u0022There was an error performing a read operation on the Blob Storage Secret Repository... Connection refused (127.0.0.1:10000)\u0022.",
+  "designDeviations": null,
+  "followUps": [
+    "Rerun the targeted Cosmos/SQL suites plus testAllExceptServiceBus and testOldConfig in an environment with the required local emulators/services available (at minimum Azurite on 127.0.0.1:10000, plus the Cosmos DB and SQL emulators).",
+    "The static route regression remained green, and the blocked runs did not surface the prior \u0022expected 500 to equal 400\u0022 assertion before infrastructure startup failed."
+  ]
+}
